@@ -60,7 +60,7 @@ public class VideoFile extends File implements Comparable<File> {
 				episode = Integer.parseInt(""+numbers.get(0).substring(1));
 			}
 			//single digit, must be episode number
-			else if (numbers.get(0).length() == 1)
+			else
 				episode = Integer.parseInt(numbers.get(0));
 		}
 		

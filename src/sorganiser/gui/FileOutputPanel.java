@@ -2,6 +2,7 @@ package sorganiser.gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -62,7 +63,7 @@ public class FileOutputPanel extends JPanel {
 		//instantiate file list
 		filesList = new JList<VideoFile>();
 		filesList.setCellRenderer(new CustomCellRenderer());
-		
+				
 		//add all components to this frame
 		northPanel.add(filesLabel);
 		northPanel.add(convertButton);
@@ -77,6 +78,15 @@ public class FileOutputPanel extends JPanel {
 	public void registerActionListener(ActionListener handler)
 	{
 		convertButton.addActionListener(handler);
+	}
+	
+	/**
+	 * Assigns a MouseListener to the file output list, in order to facilitate editing
+	 * @param listener
+	 */
+	public void registerMouseListener(MouseListener listener)
+	{
+		filesList.addMouseListener(listener);
 	}
 
 	/**

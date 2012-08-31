@@ -66,7 +66,7 @@ public class SeriesOrganiser {
 		int height = sc.nextInt();
 		
 		//read preserve setting from file TODO: notify the renamer (somewhere in data) about this setting
-		boolean preserve = (sc.next().equals("T") ? true : false);
+	//	boolean preserve = (sc.next().equals("T") ? true : false);
 		
 		//change frame size, and re-center
 		frame.setSize(width, height);

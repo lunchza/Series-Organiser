@@ -3,9 +3,11 @@ package sorganiser.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -135,6 +137,18 @@ public class SOFrame extends JFrame {
 		MyDocumentListener docListener = new MyDocumentListener();
 		//register document listener for the center panel
 		centerPanel.registerDocumentListener(docListener);
+		
+		//Establishes a mouse listener for the output file list that allows editing by way of double-clicking
+			MouseListener mouseListener = new MouseAdapter() {
+				   public void mouseClicked(MouseEvent e) {
+				       if (e.getClickCount() == 2) {
+				          int index = fileOutputPanel.getOutputFileList().locationToIndex(e.getPoint());
+				          edit(index);
+				        }
+				   }
+			};
+			//register mouse listener for output panel
+			fileOutputPanel.registerMouseListener(mouseListener);
 	}
 
 	/**
@@ -190,6 +204,25 @@ public class SOFrame extends JFrame {
 		
 		//Change program status
 		setStatus("Found " + subVideoFilesArray.length + " episodes in folder \'" + root.getAbsolutePath() + "\'");
+	}
+	
+	/**
+	 * Allows the user to change the output name of the file at index
+	 * @param index
+	 */
+	public void edit(int index)
+	{
+		String editedName = JOptionPane.showInputDialog(null, "Edit the name as desired.", outputFiles.get(index).getName());
+		if (editedName != null)
+		{
+			VideoFile file = new VideoFile(outputFiles.get(index).getParentFile().getAbsolutePath().concat("\\" + editedName));
+			outputFiles.remove(index);
+			outputFiles.add(index, file);
+			
+			//update list contents to reflect change
+			fileOutputPanel.setListContents(outputFiles);
+			setStatus("Edit successful");
+		}
 	}
 	
 	/**
