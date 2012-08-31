@@ -2,13 +2,14 @@ package sorganiser.data;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * VideoFile class is a simple extension of the File class. Only video files will be recognised by this program
  * @author Peter Pretorius
  *
  */
-public class VideoFile extends File {
+public class VideoFile extends File implements Comparable<File> {
 	
 	/**
 	 * 
@@ -20,9 +21,14 @@ public class VideoFile extends File {
 	
 	//season and episode numbers of this video file
 	private int season, episode;
+	
+	//The comparator for this class assists with list sorting
+	private static Comparator<VideoFile> comparator;
 
 	public VideoFile(String path) {
 		super(path);
+		
+		comparator = new VideoComparator();
 		
 		//grab extension from filename
 		extension = path.substring(path.lastIndexOf("."));
@@ -37,15 +43,28 @@ public class VideoFile extends File {
 	{
 		ArrayList<String> numbers = getNumbers(getName());
 		
+		//No season or episode number was found in the file name
 		if (numbers.isEmpty())
 		{
 			episode = 0;
 			season = 0;
 		}
 		
+		//single number was found
 		else if (numbers.size() == 1)
-			episode = Integer.parseInt(numbers.get(0));
+		{
+			//3 digit number, must be in [XYY] format e.g [101]
+			if (numbers.get(0).length() == 3)
+			{
+				season = Integer.parseInt(""+numbers.get(0).charAt(0));
+				episode = Integer.parseInt(""+numbers.get(0).substring(1));
+			}
+			//single digit, must be episode number
+			else if (numbers.get(0).length() == 1)
+				episode = Integer.parseInt(numbers.get(0));
+		}
 		
+		//any other number of number groups, simply take the first 2 numbers as season and episode
 		else
 		{
 			season = Integer.parseInt(numbers.get(0));
@@ -94,6 +113,23 @@ public class VideoFile extends File {
 	public int getEpisode()
 	{
 		return episode;
+	}
+	
+	public static Comparator<VideoFile> getComparator()
+	{
+		return comparator;
+	}
+	
+
+	private class VideoComparator implements Comparator<VideoFile>
+	{
+
+		@Override
+		public int compare(VideoFile vf1, VideoFile vf2) {
+						
+			return vf1.getName().compareTo(vf2.getName());
+		}
+		
 	}
 
 }

@@ -2,6 +2,7 @@ package sorganiser.data;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -61,6 +62,8 @@ public class FileHandler {
 	{
 		ArrayList<VideoFile> outputList = new ArrayList<VideoFile>(inputList.size());
 		
+		File parentFolder = inputList.get(0).getParentFile();
+		
 		//For each video in the input list 
 		for (VideoFile f: inputList)
 		{
@@ -77,12 +80,10 @@ public class FileHandler {
 			//New File name is the format with replacements, concatted with the extension
 			String newFileName = tempFormat.concat(f.getExtension());
 			
-			//Parent path of this file, since the renamed file goes into the same folder as the original
-			String parentPath = f.getAbsolutePath().substring(f.getAbsolutePath().lastIndexOf("\\"));
 			
-			//parent's path + new name gives us the complete new file
-			outputList.add(new VideoFile(parentPath.concat("\\" + newFileName)));
-		}
+			//Add new file to the output list
+			outputList.add(new VideoFile(parentFolder.getAbsolutePath().concat("\\" + newFileName)));
+		}		
 		return outputList;
 	}
 	

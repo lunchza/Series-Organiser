@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -44,6 +45,9 @@ public class SOFrame extends JFrame {
 	
 	//The list of VideoFile objects that are represented by the input file list
 	private ArrayList<VideoFile> inputFiles;
+	
+	//The list of VideoFile objects that are represented by the output file list
+	private ArrayList<VideoFile> outputFiles;
 	
 	/**
 	 * 
@@ -229,9 +233,15 @@ public class SOFrame extends JFrame {
 					
 					//format field now becomes editable
 					centerPanel.enableFormatEditing();
-					
+							
 					//Populate output file list straight away
-					fileOutputPanel.setListContents(fileHandler.determineNewNames(inputFiles, centerPanel.getFormat()));
+					//output files is assigned here
+					outputFiles = new ArrayList<VideoFile>(fileHandler.determineNewNames(inputFiles, centerPanel.getFormat()));
+							
+					//Collections.sort(outputList, VideoFile.getComparator());
+					fileOutputPanel.setListContents(outputFiles);
+					
+					
 				} catch (SOException e) {
 					//If the program fails to populate the input list, the status is set to the returned error message
 					setStatus(e.getMessage());
@@ -244,7 +254,21 @@ public class SOFrame extends JFrame {
 				if (fileOutputPanel.getOutputFileList().getModel().getSize() == 0)
 					JOptionPane.showMessageDialog(null, "Output list is empty");
 				else
-					JOptionPane.showMessageDialog(null, "Not yet implemented");
+				{
+					for (int i = 0; i < inputFiles.size(); i++)
+					{
+						//rename files
+						inputFiles.get(i).renameTo(outputFiles.get(i));
+					}
+					//refresh input file list to reflect new folder contents
+					try {
+						setRootDirectory(inputFiles.get(0).getParentFile());
+					} catch (SOException e) {
+						JOptionPane.showMessageDialog(null, "An error occurred. Please contact Peter Pretorius (ERROR_CODE = 2");
+					}
+					
+					JOptionPane.showMessageDialog(null, "Conversion complete!");
+				}
 			}
 		}
 	}
@@ -254,19 +278,21 @@ public class SOFrame extends JFrame {
 
 		@Override
 		public void changedUpdate(DocumentEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent arg0) {
-			fileOutputPanel.setListContents(FileHandler.getInstance().determineNewNames(inputFiles, centerPanel.getFormat()));
+			ArrayList<VideoFile> outFileList = FileHandler.getInstance().determineNewNames(inputFiles, centerPanel.getFormat());
+			fileOutputPanel.setListContents(outFileList);
+			outputFiles = outFileList;
 			
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent arg0) {
-			fileOutputPanel.setListContents(FileHandler.getInstance().determineNewNames(inputFiles, centerPanel.getFormat()));
+			ArrayList<VideoFile> outFileList = FileHandler.getInstance().determineNewNames(inputFiles, centerPanel.getFormat());
+			fileOutputPanel.setListContents(outFileList);
+			outputFiles = outFileList;
 		}
 		
 	}
