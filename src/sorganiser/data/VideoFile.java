@@ -64,11 +64,22 @@ public class VideoFile extends File implements Comparable<File> {
 				episode = Integer.parseInt(numbers.get(0));
 		}
 		
-		//any other number of number groups, simply take the first 2 numbers as season and episode
+		//any other number of number groups, simply take the first 2 numbers as season and episode UNLESS the first number is 3 digits
+		//in which case use that as the basis for season/episode
 		else
 		{
-			season = Integer.parseInt(numbers.get(0));
-			episode = Integer.parseInt(numbers.get(1));
+			
+			if (Integer.parseInt(numbers.get(0)) > 100)
+			{
+				season = Integer.parseInt(""+numbers.get(0).charAt(0));
+				episode = Integer.parseInt(""+numbers.get(0).substring(1));
+			}
+			
+			else
+			{
+				season = Integer.parseInt(numbers.get(0));
+				episode = Integer.parseInt(numbers.get(1));
+			}
 		}	
 	}
 	
