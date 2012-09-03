@@ -15,8 +15,7 @@ public class RenamePolicy {
 	public static final int SEASON_AND_EPISODE_NUMBERS = 0;
 	public static final int EPISODE_NUMBERS_ONLY = 1;
 	
-	public static int numBrokenFiles = 0;
-	
+	private String lastSeenSeason; //Helpful for various reasons, explain this later etc
 	
 	/**
 	 * The indices that this policy recognises as being the season and episode indexes

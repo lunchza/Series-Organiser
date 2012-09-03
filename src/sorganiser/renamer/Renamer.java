@@ -60,6 +60,12 @@ public class Renamer {
 			
 			finally
 			{
+				if (season.length() == 3 && !season.startsWith("0")) //season number greater than 100? Yeah right...
+				{
+					episode = "YY";
+				}
+				
+				
 				//Looking for 2 numbers but only found 1
 				if (episode.equals("YY"))
 				{
@@ -79,7 +85,10 @@ public class Renamer {
 					}
 					
 					else //Found a 2 digit number and nothing else, must be the episode number
+					{
 						episode = season;
+						season = "XX"; //Let the user know that the season number for this episode could not be determined
+					}
 				}
 				
 				
