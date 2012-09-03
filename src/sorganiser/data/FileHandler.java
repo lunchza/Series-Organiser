@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import sorganiser.renamer.RenamePolicy;
+import sorganiser.renamer.Renamer;
+
 /**
  * This class handles all file operations, from the initial list population to the renaming at the end
  * @author Peter Pretorius
@@ -64,20 +67,20 @@ public class FileHandler {
 		File parentFolder = inputList.get(0).getParentFile();
 		
 		//For each video in the input list 
-		for (VideoFile f: inputList)
+		for (int i = 0; i < inputList.size(); i++)
 		{
-			//grab season and episode numbers from the input file
-			int season = f.getSeason();
-			int episode = f.getEpisode();
+			//Get the policy for this video
+			RenamePolicy policy = Renamer.getInstance().getRenamePolicies().get(i);
 			
+			ArrayList<String> numbers = inputList.get(i).getNumbers();
 			
-			String tempFormat = outFormat;
-			if (tempFormat.contains("XX"))
-				tempFormat = tempFormat.replace("XX", season < 10 ? "0"+season : ""+season);
-			tempFormat = tempFormat.replace("YY", episode < 10 ? "0"+episode : ""+episode);
+			policy.setKeyNumbers(numbers);
+			
+			//Renamer determines new name and renames accordingly
+			String newFormat = Renamer.rename(policy, outFormat);
 			
 			//New File name is the format with replacements, concatted with the extension
-			String newFileName = tempFormat.concat(f.getExtension());
+			String newFileName = newFormat.concat(inputList.get(i).getExtension());
 			
 			
 			//Add new file to the output list

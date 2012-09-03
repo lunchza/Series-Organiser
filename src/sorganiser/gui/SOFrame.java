@@ -16,6 +16,7 @@ import javax.swing.event.DocumentListener;
 import sorganiser.data.FileHandler;
 import sorganiser.data.VideoFile;
 import sorganiser.main.SOException;
+import sorganiser.renamer.Renamer;
 
 /**
  * The main program window
@@ -165,7 +166,7 @@ public class SOFrame extends JFrame {
 	
 	/**
 	 * Once a directory is chosen by the user, this method populates the file input list with the sub-video files
-	 * in that folder. 
+	 * in that folder. It then creates renaming policies for all of those input files
 	 * @param root
 	 * @throws SOException
 	 */
@@ -201,6 +202,9 @@ public class SOFrame extends JFrame {
 		
 		//Finally, Change File Input list contents
 		fileInputPanel.setListContents(subVideoFilesArray);
+		
+		//create default policies for input files
+		Renamer.getInstance().createPolicies(inputFiles.size());
 		
 		//Change program status
 		setStatus("Found " + subVideoFilesArray.length + " episodes in folder \'" + root.getAbsolutePath() + "\'");
@@ -271,7 +275,6 @@ public class SOFrame extends JFrame {
 					//output files is assigned here
 					outputFiles = new ArrayList<VideoFile>(fileHandler.determineNewNames(inputFiles, centerPanel.getFormat()));
 							
-					//Collections.sort(outputList, VideoFile.getComparator());
 					fileOutputPanel.setListContents(outputFiles);
 					
 					
