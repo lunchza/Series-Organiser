@@ -15,12 +15,15 @@ public class RenamePolicy {
 	public static final int SEASON_AND_EPISODE_NUMBERS = 0;
 	public static final int EPISODE_NUMBERS_ONLY = 1;
 	
-	private String lastSeenSeason; //Helpful for various reasons, explain this later etc
-	
 	/**
 	 * The indices that this policy recognises as being the season and episode indexes
 	 */
 	private int seasonIndex, episodeIndex;
+	
+	/**
+	 * String representation of season and episode numbers
+	 */
+	private String seasonNumber, episodeNumber;
 	
 	/**
 	 * The key numbers used by this policy
@@ -90,12 +93,38 @@ public class RenamePolicy {
 			
 	}
 	
+	public void registerSeasonNumber(String s)
+	{
+		seasonNumber = s;
+	}
+	
+	public void registerEpisodeNumber(String s)
+	{
+		episodeNumber = s;
+	}
+	
 	public int getRule()
 	{
 		if (seasonIndex == -1)
 			return EPISODE_NUMBERS_ONLY;
 		else
 			return SEASON_AND_EPISODE_NUMBERS;
+	}
+
+	public String getSeasonNumber() {
+		return seasonNumber;
+	}
+
+	public String getEpisodeNumber() {
+		return episodeNumber;
+	}
+
+	public void setSeasonNumber(String seasonNumber) {
+		this.seasonNumber = seasonNumber;
+	}
+
+	public void setEpisodeNumber(String episodeNumber) {
+		this.episodeNumber = episodeNumber;
 	}
 
 }

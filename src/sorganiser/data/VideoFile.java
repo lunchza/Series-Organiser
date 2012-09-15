@@ -19,11 +19,16 @@ public class VideoFile extends File implements Comparable<File> {
 	//The extension of this video file
 	private String extension;
 	
+	//Flag for exclusion
+	private boolean excluded;
+	
 	//The comparator for this class assists with list sorting
 	private static Comparator<VideoFile> comparator;
 
 	public VideoFile(String path) {
 		super(path);
+		
+		excluded = false;
 		
 		comparator = new VideoComparator();
 		
@@ -64,6 +69,16 @@ public class VideoFile extends File implements Comparable<File> {
 	public String getExtension()
 	{
 		return extension;
+	}
+	
+	public void toggleExclusion()
+	{
+			excluded = !excluded;
+	}
+	
+	public boolean isExcluded()
+	{
+		return excluded;
 	}
 
 	public static Comparator<VideoFile> getComparator()

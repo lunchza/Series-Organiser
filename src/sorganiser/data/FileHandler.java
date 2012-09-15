@@ -16,12 +16,12 @@ import sorganiser.renamer.Renamer;
  */
 public class FileHandler {
 	//singleton
-	private static FileHandler fileHandler;
+	private static final FileHandler fileHandler = new FileHandler();
 	
 	//file chooser object
 	private JFileChooser fileChooser;
 	
-	public FileHandler()
+	private FileHandler()
 	{
 			//initialise file chooser
 		   	fileChooser = new JFileChooser(new File("."));
@@ -35,9 +35,6 @@ public class FileHandler {
 	//singleton instance
 	public static FileHandler getInstance()
 	{
-		if (fileHandler == null)
-			fileHandler = new FileHandler();
-		
 		return fileHandler;
 	}
 	

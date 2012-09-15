@@ -31,7 +31,7 @@ public class SeriesOrganiser {
 	public void init()
 	{
 		//load GUI interface
-		frame = new SOFrame();
+		frame = SOFrame.getInstance();
 		
 		//load frame config
 		if (!loadConfig())

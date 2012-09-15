@@ -54,6 +54,8 @@ public class Renamer {
 			try {
 				season = policy.getKeyNumbers().get(policy.getSeasonIndex());
 				episode = policy.getKeyNumbers().get(policy.getEpisodeIndex());
+				policy.registerSeasonNumber(season);
+				policy.registerEpisodeNumber(episode);
 			} catch (IndexOutOfBoundsException e) {
 				episode = "YY";
 			}
@@ -62,7 +64,7 @@ public class Renamer {
 			{
 				if (season.length() == 3 && !season.startsWith("0")) //season number greater than 100? Yeah right...
 				{
-					episode = "YY";
+					episode = "YY"; //Invalidates episode number, forcing the algorithm to re-evaluate
 				}
 				
 				
@@ -91,12 +93,15 @@ public class Renamer {
 					}
 				}
 				
+				policy.registerSeasonNumber(season);
+				policy.registerEpisodeNumber(episode);
 				
 				if (season.length() == 1) //pad season to 2 digits
 					season = "0" + season;
 				
 				if (episode.length() == 1) //pad episode to 2 digits
 					episode = "0" + episode;
+			
 				
 				outFormat = outFormat.replace("XX", season);
 				outFormat = outFormat.replace("YY", episode);

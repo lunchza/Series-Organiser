@@ -16,6 +16,7 @@ import javax.swing.event.DocumentListener;
 import sorganiser.data.FileHandler;
 import sorganiser.data.VideoFile;
 import sorganiser.main.SOException;
+import sorganiser.renamer.RenamePolicy;
 import sorganiser.renamer.Renamer;
 
 /**
@@ -24,6 +25,8 @@ import sorganiser.renamer.Renamer;
  *
  */
 public class SOFrame extends JFrame {
+	//singleton
+	private static SOFrame soFrame = new SOFrame();
 	
 	//main program panel
 	private JPanel panel;
@@ -57,7 +60,7 @@ public class SOFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public SOFrame()
+	private SOFrame()
 	{
 		super("Series Organiser v2.0");
 		
@@ -211,6 +214,27 @@ public class SOFrame extends JFrame {
 	}
 	
 	/**
+	 * Allows the user to inspect the file at the selected index
+	 * @param index
+	 */
+	public void inspect(int index)
+	{
+		VideoFile inspectedFile = fileInputPanel.getFileAt(index); //get file object
+		RenamePolicy inspectedPolicy = Renamer.getInstance().getRenamePolicies().get(index);
+		new InspectFrame(inspectedFile, inspectedPolicy).setVisible(true);
+	}
+	
+	/**
+	 * Excludes the specified file from the renaming process
+	 * @param index
+	 */
+	public void toggleExclude(int index)
+	{
+		VideoFile excludedFile = fileInputPanel.getFileAt(index); //get file object
+		excludedFile.toggleExclusion();
+	}
+	
+	/**
 	 * Allows the user to change the output name of the file at index
 	 * @param index
 	 */
@@ -236,6 +260,12 @@ public class SOFrame extends JFrame {
 	public void setStatus(String m)
 	{
 		statusBar.setStatus(m);
+	}
+	
+	//singleton
+	public static SOFrame getInstance()
+	{
+		return soFrame;
 	}
 
 	/**
@@ -293,8 +323,9 @@ public class SOFrame extends JFrame {
 				{
 					for (int i = 0; i < inputFiles.size(); i++)
 					{
-						//rename files
-						inputFiles.get(i).renameTo(outputFiles.get(i));
+						//rename files with exclusion check
+						if(!inputFiles.get(i).isExcluded())
+							inputFiles.get(i).renameTo(outputFiles.get(i));
 					}
 					//refresh input file list to reflect new folder contents
 					try {
@@ -309,6 +340,11 @@ public class SOFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * This Listener ensures that output dynamically changes as the output format is changed. 
+	 * @author Peter Pretorius
+	 *
+	 */
 	private class MyDocumentListener implements DocumentListener
 	{
 
